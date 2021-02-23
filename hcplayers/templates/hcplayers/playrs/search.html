@@ -1,0 +1,27 @@
+{% extends 'hcplayers/base.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    {% if query %}
+        <h1>Search results containing "{{ query }}"</h1>
+        <h3>
+            {% with results.count as total_results %}
+                Найдено: {{ total_results }} result{{ total_results|pluralize }}
+            {% endwith %}
+        </h3>
+        {% for player in results %}
+            <h4><a href="{{ player.get_absolute_url }}">{{ player.first_name }} {{ player.last_name }}</a></h4>
+            {% empty %}
+                <p>No results.</p>
+        {% endfor %}
+        <p><a href="{% url "plr:player_search" %}">Search again</a></p>
+    {% else %}
+        <h1>Search players</h1>
+        <form method="get">
+            {{ form.as_p }}
+            <input type="submit" value="Search">
+        </form>
+    {% endif %}
+    <p><a href="{% url "plr:player_list" %}">Players list</a></p>
+{% endblock %}

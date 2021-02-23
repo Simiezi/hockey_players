@@ -1,0 +1,13 @@
+{% extends 'hcplayers/base.html' %}
+
+{% block title %}Hockey players{% endblock %}
+
+{% block content %}
+    {% for player in players %}
+        <h2>
+            <a href="{{ player.get_absolute_url }}">{{ player.last_name }} {{ player.first_name }}</a>
+        </h2>
+    {% endfor %}
+    {% include "pagination.html" with page=players %}
+    <p><a href="{% url "plr:player_search" %}">Search</a></p>
+{% endblock %}

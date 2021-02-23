@@ -1,0 +1,45 @@
+{% extends 'hcplayers/base.html' %}
+{% load hitcount_tags %}
+
+{% block title %}{{ player.name }}{% endblock %}
+
+{% block content %}
+    <p>Views: {% get_hit_count for player %}</p>
+    <h1>{{ player.last_name }} {{ player.first_name }}</h1>
+    <img src="{{ player.player_photo.url }}">
+    <p>Date of birth: {{ player.date_of_birth }}</p>
+    <p>{{ player.description }}</p>
+    <p><a href="{% url "plr:player_list" %}">Players list</a></p>
+    {% with player.comments.count as total_comments %}
+    <h2>
+        {{ total_comments }} comment {{ total_comments|pluralize }}
+    </h2>
+    {% endwith %}
+    {% for comment in comments %}
+        <div class="comment">
+            <p class="info">
+                Comment {{ forloop.counter }} by {{ comment.name }}
+                {{ comment.created }}
+            </p>
+        {{ comment.body|linebreaks }}
+        </div>
+        {% empty %}
+            <p>Комментариев еще нет</p>
+    {% endfor %}
+    {% if new_comment %}
+        <h2>Комментарий был добавлен</h2>
+        <h2>Добавить комментарий</h2>
+        <form method="post">
+            {{ comment_form.as_p }}
+            {% csrf_token %}
+            <p><input type="submit" value="Добавить комментарий"></p>
+        </form>
+    {% else %}
+        <h2>Добавить комментарий</h2>
+        <form method="post">
+            {{ comment_form.as_p }}
+            {% csrf_token %}
+            <p><input type="submit" value="Добавить комментарий"></p>
+        </form>
+    {% endif %}
+{% endblock %}
